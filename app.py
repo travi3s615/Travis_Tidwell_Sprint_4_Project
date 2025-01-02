@@ -73,5 +73,5 @@ st.markdown("""
 - The **Price vs Model Year** scatter plot shows that newer models tend to have higher prices.
 - The **Count of Cars by Fuel Type** bar chart reveals the popularity of certain fuel types.
 - The **Price Distribution by Condition** box plot indicates that cars in 'new' or 'excellent' condition typically have higher prices.
-""")
+""")X
 
