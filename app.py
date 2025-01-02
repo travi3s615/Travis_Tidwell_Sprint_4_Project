@@ -6,4 +6,4 @@ st.write("Hello, world!")
 
 df = pd.read_csv("vehicles_us.csv")
 
-st.table(df)
+st.dataframe(df.head(10))
