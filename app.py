@@ -30,12 +30,12 @@ min_price, max_price = st.sidebar.slider(
     "Select Price Range", int(df['price'].min()), int(df['price'].max()), (5000, 20000)
 )
 
-filtered_data = df[(df['fuel'] == fuel_type) & (df['price'] >= min_price) & (df['price'] <= max_price)]
+filtered_data = df[(df['price'] >= min_price) & (df['price'] <= max_price)]
 
 if filtered_data.empty:
     st.warning("No data matches the selected filters. Please adjust the filter criteria.")
 else:
-    
+
     st.write("### Price vs Model Year")
     scatter = px.scatter(
         filtered_data,
@@ -47,13 +47,18 @@ else:
     st.plotly_chart(scatter)
 
     st.write("### Count of Cars by Fuel Type")
+
+    fuel_type_data = filtered_data.groupby('fuel').size().reset_index(name='count')
+
     bar_chart = px.bar(
-        filtered_data,
+        fuel_type_data,
         x='fuel',
+        y='count',
         title='Count of Cars by Fuel Type',
-        labels={'fuel': 'Fuel Type'},
-        color='fuel'
+        labels={'fuel': 'Fuel Type', 'count': 'Count'},
+        color='fuel',
     )
+
     st.plotly_chart(bar_chart)
 
     st.write("### Price Distribution by Condition")
