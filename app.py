@@ -50,22 +50,39 @@ else:
     )
     st.plotly_chart(scatter)
 
-    st.markdown("""
-    - A scatter plot visualizes the relationship between `model_year` (x-axis) and `price` (y-axis).
-    - Labels and titles are added for clarity. This visualization helps identify trends, such as newer cars generally having higher prices.
-    """)
+st.sidebar.header("Filter Options")
+fuel_type = st.sidebar.selectbox("Select Fuel Type:", options=df['fuel'].unique())
+min_price, max_price = st.sidebar.slider(
+    "Select Price Range:", 
+    min_value=int(df['price'].min()), 
+    max_value=int(df['price'].max()), 
+    value=(5000, 20000)
+)
 
+filtered_data = df[(df['fuel'] == fuel_type) & (df['price'] >= min_price) & (df['price'] <= max_price)]
+
+if filtered_data.empty:
+    st.warning("No data matches the selected filters. Please adjust the filter criteria.")
+else:
+   
     st.write("### Count of Cars by Fuel Type")
-    fuel_type_data = filtered_data.groupby('fuel').size().reset_index(name='count')
+    bar_chart_data = filtered_data['fuel'].value_counts().reset_index()
+    bar_chart_data.columns = ['Fuel Type', 'Count']
+
     bar_chart = px.bar(
-        fuel_type_data,
-        x='fuel',
-        y='count',
-        title='Count of Cars by Fuel Type',
-        labels={'fuel': 'Fuel Type', 'count': 'Count'},
-        color='fuel',
+        bar_chart_data,
+        x='Fuel Type',
+        y='Count',
+        title="Count of Cars by Fuel Type",
+        labels={"Fuel Type": "Fuel Type", "Count": "Number of Cars"},
+        color='Fuel Type'
     )
+
     st.plotly_chart(bar_chart)
+    st.markdown("""
+    - A **bar chart** visualizes the number of cars for each fuel type in the dataset.
+    - The `color` parameter is used to display each fuel type distinctly, improving readability.
+    """)
 
     st.markdown("""
     - A bar chart is created to show the number of cars for each fuel type in the dataset.
